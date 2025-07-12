@@ -180,6 +180,74 @@ const call = (command: any, payload?: any) => {
     editor.value.action(callCommand(command, payload));
   } catch (error) {
     console.error('Command execution failed:', error);
+    // 如果命令执行失败，使用替代方案
+    handleCommandFallback(command, payload);
+  }
+};
+
+// 命令执行失败的替代方案 - 直接操作编辑器内容
+const handleCommandFallback = (command: any, payload?: any) => {
+  try {
+    // 获取当前选中的文本
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    if (!selectedText) return;
+    
+    let newText = '';
+    
+    // 处理加粗命令
+    if (command === toggleStrongCommand) {
+      // 检查是否已经是粗体格式
+      if (selectedText.startsWith('**') && selectedText.endsWith('**')) {
+        newText = selectedText.slice(2, -2); // 移除粗体标记
+      } else {
+        newText = `**${selectedText}**`; // 添加粗体标记
+      }
+    }
+    // 处理斜体命令
+    else if (command === toggleEmphasisCommand) {
+      // 检查是否已经是斜体格式
+      if (selectedText.startsWith('*') && selectedText.endsWith('*') && !selectedText.startsWith('**')) {
+        newText = selectedText.slice(1, -1); // 移除斜体标记
+      } else {
+        newText = `*${selectedText}*`; // 添加斜体标记
+      }
+    }
+    // 处理行内代码命令
+    else if (command === toggleInlineCodeCommand) {
+      // 检查是否已经是代码格式
+      if (selectedText.startsWith('`') && selectedText.endsWith('`')) {
+        newText = selectedText.slice(1, -1); // 移除代码标记
+      } else {
+        newText = `\`${selectedText}\``; // 添加代码标记
+      }
+    }
+    // 处理标题命令
+    else if (command === wrapInHeadingCommand && typeof payload === 'number') {
+      const headingPrefix = '#'.repeat(payload);
+      newText = `${headingPrefix} ${selectedText}`;
+    }
+    
+    if (newText) {
+      // 替换选中的文本
+      range.deleteContents();
+      range.insertNode(document.createTextNode(newText));
+      
+      // 更新编辑器内容
+      setTimeout(() => {
+        const editorEl = editorContainerRef.value?.querySelector('.milkdown');
+        if (editorEl) {
+          editorContent.value = editorEl.textContent || '';
+          hasUnsavedChanges.value = true;
+        }
+      }, 100);
+    }
+  } catch (error) {
+    console.error('替代命令执行失败:', error);
   }
 };
 
@@ -355,6 +423,18 @@ onMounted(async () => {
         
       editor.value = newEditor;
       
+      // 等待编辑器完全准备好
+      await new Promise((resolve) => {
+        const checkReady = () => {
+          if (editor.value?.ctx) {
+            resolve(true);
+          } else {
+            setTimeout(checkReady, 50);
+          }
+        };
+        checkReady();
+      });
+      
       // Set up spellcheck (disabled by default)
       setTimeout(() => {
         const proseMirrorElement = editorContainerRef.value?.querySelector('.ProseMirror') as HTMLElement;
@@ -363,16 +443,68 @@ onMounted(async () => {
         }
       }, 100);
       
-      // Add a small delay to ensure all plugins are fully initialized
+      // 确保所有插件都已加载后再启用命令
       setTimeout(() => {
         loading.value = false;
-      }, 200);
+        console.log('Editor fully initialized and ready for commands');
+      }, 300);
     } catch (e) {
       console.error('Editor initialization failed:', e);
       loading.value = false;
     }
   }
   setupElectronEvents();
+  
+  // 添加键盘快捷键支持
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.ctrlKey || event.metaKey) {
+      switch (event.key.toLowerCase()) {
+        case 'b':
+          event.preventDefault();
+          call(toggleStrongCommand);
+          break;
+        case 'i':
+          event.preventDefault();
+          call(toggleEmphasisCommand);
+          break;
+        case 's':
+          event.preventDefault();
+          if (event.shiftKey) {
+            saveAsFile();
+          } else {
+            saveFile();
+          }
+          break;
+        case 'n':
+          event.preventDefault();
+          newFile();
+          break;
+        case 'o':
+          event.preventDefault();
+          openFile();
+          break;
+        case 'z':
+          event.preventDefault();
+          if (event.shiftKey) {
+            call(redoCommand);
+          } else {
+            call(undoCommand);
+          }
+          break;
+        case 'y':
+          event.preventDefault();
+          call(redoCommand);
+          break;
+      }
+    }
+  };
+  
+  document.addEventListener('keydown', handleKeyDown);
+  
+  // 清理键盘事件监听器
+  onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeyDown);
+  });
 });
 
 onUnmounted(() => {

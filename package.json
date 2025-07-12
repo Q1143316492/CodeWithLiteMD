@@ -22,7 +22,6 @@
     "@milkdown/preset-commonmark": "^7.15.1",
     "@milkdown/preset-gfm": "^7.15.1",
     "@milkdown/theme-nord": "^7.15.1",
-    "@milkdown/theme-tokyo": "^6.5.4",
     "@milkdown/utils": "^7.15.1",
     "@milkdown/vue": "^7.15.1",
     "electron": "^28.0.0",
