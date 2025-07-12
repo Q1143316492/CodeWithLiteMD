@@ -1,0 +1,310 @@
+/* 全局样式 */
+:root {
+  --primary-color: #0066cc;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --border-color: #e1e5e9;
+  --text-color: #2c3e50;
+  --bg-color: #ffffff;
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--light-color);
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 工具栏样式 */
+.toolbar {
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow);
+  position: relative;
+  z-index: 100;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-right: 12px;
+  border-right: 1px solid var(--border-color);
+}
+
+.toolbar-group:last-child {
+  border-right: none;
+}
+
+.toolbar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-color);
+  transition: all 0.2s ease;
+}
+
+.toolbar-button:hover {
+  background-color: var(--light-color);
+  color: var(--primary-color);
+}
+
+.toolbar-button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.toolbar-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.file-info {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.file-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--success-color);
+}
+
+.status-dot.unsaved {
+  background-color: var(--warning-color);
+}
+
+/* 编辑器容器 */
+.editor-container {
+  flex: 1;
+  display: flex;
+  background: var(--bg-color);
+  overflow: hidden;
+}
+
+.editor-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+
+/* Milkdown 编辑器样式覆盖 */
+.milkdown {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.milkdown .editor {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.milkdown .editor:focus {
+  outline: none;
+}
+
+/* Markdown 内容样式 */
+.milkdown h1,
+.milkdown h2,
+.milkdown h3,
+.milkdown h4,
+.milkdown h5,
+.milkdown h6 {
+  margin: 24px 0 16px 0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.milkdown h1 {
+  font-size: 2em;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.milkdown h2 {
+  font-size: 1.5em;
+}
+
+.milkdown h3 {
+  font-size: 1.25em;
+}
+
+.milkdown p {
+  margin: 16px 0;
+}
+
+.milkdown blockquote {
+  margin: 16px 0;
+  padding: 0 16px;
+  border-left: 4px solid var(--border-color);
+  color: var(--secondary-color);
+  font-style: italic;
+}
+
+.milkdown ul,
+.milkdown ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.milkdown li {
+  margin: 4px 0;
+}
+
+.milkdown code {
+  background-color: var(--light-color);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
+}
+
+.milkdown pre {
+  background-color: var(--light-color);
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.milkdown pre code {
+  background: none;
+  padding: 0;
+}
+
+.milkdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.milkdown th,
+.milkdown td {
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.milkdown th {
+  background-color: var(--light-color);
+  font-weight: 600;
+}
+
+.milkdown a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.milkdown a:hover {
+  text-decoration: underline;
+}
+
+.milkdown img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 16px 0;
+}
+
+.milkdown hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 24px 0;
+}
+
+/* 状态栏 */
+.status-bar {
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--secondary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: var(--secondary-color);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 8px;
+    overflow-x: auto;
+  }
+  
+  .milkdown .editor {
+    padding: 16px;
+    font-size: 14px;
+  }
+  
+  .file-info {
+    display: none;
+  }
+}

@@ -1,0 +1,32 @@
+# Node
+node_modules/
+*.log
+
+# Build output
+dist/
+dist-electron/
+release/
+
+# VSCode
+.vscode/
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Env
+.env
+.env.*
+
+# Electron
+*.asar
+
+# Others
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
